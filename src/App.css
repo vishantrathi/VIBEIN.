@@ -1,1 +1,173 @@
 @import "tailwindcss";
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.App {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom,  #151965,#080d46);
+  color: white;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 40px;
+  font-weight: bold;
+  z-index: 1;
+  position: relative;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: white;
+}
+
+.nav a {
+  margin-left: 32px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.nav a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+/* Main content */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+h1 {
+  font-size: 2.8em;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.highlight {
+  color: #6eafff;
+}
+
+p {
+  margin-top: 0;
+  font-size: 1.2em;
+  color: #ccc;
+  
+  font-weight: bolder;
+}
+
+/* Input field */
+.input-wrapper {
+  position: relative;
+  width: 320px;
+  margin-top: 40px;
+  z-index: 1;
+}
+
+.styled-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.1em;
+  border: none;
+  border-bottom: 2px solid #6eafff;
+  background: transparent;
+  color: white;
+  font-weight: 600;
+}
+
+.styled-input:focus {
+  outline: none;
+  border-color: #a2c6ff;
+}
+
+/* Placeholder animation */
+.placeholder-fake {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  padding-left: 2px;
+  color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  font-size: 1.1em;
+  font-family: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.red-cursor {
+  color: red;
+  font-weight: bold;
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/*Song card*/
+.loading-text {
+  margin-top: 20px;
+  font-style: italic;
+  color: #ccc;
+}
+
+.song-list {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.song-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px 24px;
+  width: 280px;
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.song-card h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.song-card p {
+  margin: 4px 0;
+  font-size: 0.95rem;
+  color: #aaa;
+}
+
+.song-card a {
+  text-decoration: none;
+  color: #6eafff;
+  font-weight: 500;
+}
