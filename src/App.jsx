@@ -36,6 +36,8 @@ function App() {
     return () => clearInterval(blinkInterval);
   }, []);
 
+
+  //////////////////////////////////////
   const handleSubmit = async () => {
   setLoading(true);
   setSongs([]);
@@ -59,7 +61,7 @@ function App() {
 
   setLoading(false);
 };
-
+////////////////////////////////////////////////
 
   return (
     <div className="App">
@@ -85,7 +87,7 @@ function App() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.5 }}
         >
-          Let's turn your mood into music.
+          Let's turn your mood into music
         </motion.p>
 
         <motion.div
