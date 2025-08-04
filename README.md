@@ -119,4 +119,4 @@ MIT License — Free to use and modify.
 
 ## 👋 Author
 
-Built with ❤️ by \[your name]. Feel free to contribute or fork!
+Built with ❤️. Feel free to contribute or fork!
