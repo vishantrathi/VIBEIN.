@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import './App.css'
+import './App.css';
 
 function App() {
-  const fullText = "i miss my friend";
+  const fullText = "";
   const [typedText, setTypedText] = useState('');
   const [mood, setMood] = useState('');
+  const [emotion, setEmotion] = useState('');
   const [cursorVisible, setCursorVisible] = useState(true);
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [currentPreview, setCurrentPreview] = useState(null);
+  const audioRef = useRef(null);
 
+  // Typing animation effect
   useEffect(() => {
     let index = 0;
     const interval = setInterval(() => {
@@ -29,6 +31,7 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // Cursor blink effect
   useEffect(() => {
     const blinkInterval = setInterval(() => {
       setCursorVisible((prev) => !prev);
@@ -36,35 +39,49 @@ function App() {
     return () => clearInterval(blinkInterval);
   }, []);
 
-
-  //////////////////////////////////////
+  // Fetch emotion + songs from backend
   const handleSubmit = async () => {
-  setLoading(true);
-  setSongs([]);
+    setLoading(true);
+    setSongs([]);
+    setEmotion('');
 
-  try {
-    const res = await fetch('http://localhost:5000/api/recommend', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mood })  // sending the mood state
-    });
+    try {
+      const res = await fetch('http://localhost:5000/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: mood })
+      });
 
-    if (!res.ok) {
-      throw new Error('Network response was not ok');
+      if (!res.ok) throw new Error('Backend error');
+
+      const data = await res.json();
+      setEmotion(data.emotion);
+      setSongs(data.songs);
+
+    } catch (err) {
+      console.error('Error:', err);
     }
 
-    const data = await res.json();
-    setSongs(data.songs);  // assuming backend returns { songs: [...] }
-  } catch (error) {
-    console.error('Error fetching from backend:', error);
-  }
+    setLoading(false);
+  };
 
-  setLoading(false);
-};
-////////////////////////////////////////////////
+  // Play/Pause preview
+  const togglePlay = (url) => {
+    if (currentPreview === url) {
+      audioRef.current.pause();
+      setCurrentPreview(null);
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      audioRef.current = new Audio(url);
+      audioRef.current.play();
+      setCurrentPreview(url);
+    }
+  };
 
   return (
-    <div className="App">
+    <div className="App" style={{ overflowY: 'auto', maxHeight: '100vh' }}>
       <nav className="nav">
         <div className="logo">VIBIN.</div>
         <div className="links">
@@ -102,17 +119,27 @@ function App() {
             onChange={(e) => setMood(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
             className="styled-input"
+            placeholder="Type how you feel..."
           />
-          {/* {!mood && (
+          {!mood && (
             <div className="placeholder-fake">
               {typedText}
-              {cursorVisible && <span className="">|</span>}
+              {cursorVisible && <span className="blinking-cursor">|</span>}
             </div>
-          )} */}
+          )}
         </motion.div>
 
+        {/* Emotion Display */}
+        {emotion && (
+          <p className="emotion-detected">
+            Detected Emotion: <strong>{emotion.toUpperCase()}</strong>
+          </p>
+        )}
+
+        {/* Loading Indicator */}
         {loading && <p className="loading-text">Finding your vibe...</p>}
 
+        {/* Songs */}
         <motion.div
           className="song-list"
           initial={{ opacity: 0 }}
@@ -127,9 +154,22 @@ function App() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
             >
+              <img src={song.album_image} alt="album" className="album-art" />
               <h4>{song.title}</h4>
               <p>{song.artist}</p>
-              <a href={song.url} target="_blank" rel="noreferrer">🎵 Listen</a>
+
+              {song.preview_url ? (
+  <button onClick={() => togglePlay(song.preview_url)}>
+    {currentPreview === song.preview_url ? "⏸ Pause" : "▶️ Play"}
+  </button>
+) : (
+  <button disabled>Preview Unavailable</button>
+)}
+*
+
+              <a href={song.external_url} target="_blank" rel="noreferrer">
+                🎵 Listen on Spotify
+              </a>
             </motion.div>
           ))}
         </motion.div>
